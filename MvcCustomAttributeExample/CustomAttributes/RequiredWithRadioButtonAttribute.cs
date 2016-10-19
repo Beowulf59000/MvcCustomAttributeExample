@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace MvcCustomAttributeExample.CustomAttributes
 {
@@ -12,7 +13,7 @@ namespace MvcCustomAttributeExample.CustomAttributes
     /// Spécifie qu'une valeur de champ de données est requise et est liée à une case à cocher
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-    public class RequiredWithRadioButtonAttribute : ValidationAttribute
+    public class RequiredWithRadioButtonAttribute : ValidationAttribute, IClientValidatable
     {
         /// <summary>
         /// Nom de la propriété de la case à cocher
@@ -57,6 +58,20 @@ namespace MvcCustomAttributeExample.CustomAttributes
                 return new ValidationResult(FormatErrorMessage(validationContext.DisplayName));
 
             return ValidationResult.Success;
+        }
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            var clientValidationRule = new ModelClientValidationRule()
+            {
+                ErrorMessage = FormatErrorMessage(metadata.GetDisplayName()),
+                ValidationType = "requiredwithradiobutton"
+            };
+
+            clientValidationRule.ValidationParameters.Add("radiobuttonproperty", this._radioButtonProperty);
+            clientValidationRule.ValidationParameters.Add("valuetocompare", this._valueToCompare);
+
+            return new[] { clientValidationRule };
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvcCustomAttributeExample.CustomAttributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace MvcCustomAttributeExample.Models
         /// Contenu A
         /// </summary>
         [Display(Name = "Contenu A")]
+        [RequiredWithRadioButton("Type", "A")]
         [StringLength(500, ErrorMessage = "50 caractères maximum.")]
         public string ContenuA { get; set; }
 
@@ -26,6 +28,7 @@ namespace MvcCustomAttributeExample.Models
         /// Contenu B
         /// </summary>
         [Display(Name = "Contenu B")]
+        [RequiredWithRadioButton("Type", "B")]
         [StringLength(500, ErrorMessage = "500 caractères maximum.")]
         public string ContenuB { get; set; }
     }
